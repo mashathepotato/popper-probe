@@ -15,10 +15,45 @@ papers you've been reading, and it will:
 Over time it keeps a markdown ledger of your hypotheses, the evidence
 for and against, and the moments you should have changed your mind.
 
+## Install
+
+In any Claude Code session:
+
+```
+/plugin marketplace add mashathepotato/popper-probe
+/plugin install popper-probe@popper
+```
+
+That installs `popper-probe` at the user level — available in every project,
+not just one. Restart Claude Code (or `/reload-plugins`) and you're done.
+
+To pull updates later:
+
+```
+/plugin marketplace update popper
+```
+
+## Use it
+
+Start any Claude Code session and describe something hypothesis-shaped:
+
+> *"I think X causes Y. Here are the papers I've been reading: refs/a.pdf, refs/b.pdf"*
+
+`popper-probe` will run an adversarial-but-constructive Popperian dialogue
+(optional state-of-the-art orientation, then operational restatement,
+falsifier, test design, distinctiveness) and write a structured
+`hypothesis.md` to `popper-corpus/<slug>/` in your working directory.
+
+You can validate any hypothesis file against the schema with:
+
+```
+python3 scripts/validate_hypothesis.py popper-corpus/<slug>/hypothesis.md
+```
+
 ## Status
 
-V1 in implementation: the intake skill (refining ideas into falsifiable
-hypotheses). Corpus, observation logging, and audits follow.
+V1 — the intake skill. Corpus tooling, observation logging, and audits
+follow in subsequent phases.
 
 ## Reference
 
@@ -31,9 +66,3 @@ hypotheses). Corpus, observation logging, and audits follow.
 - Vision for the full companion:
   [`context/overview.md`](context/overview.md)
 
-## How this differs from superpowers' `brainstorming` skill
-
-`brainstorming` refines *software designs* through supportive clarification.
-`popper-probe` interrogates *empirical claims* through attempted refutation.
-They are complementary — use both on a research project: `brainstorming`
-for the code, `popper-probe` for the scientific hypothesis.
