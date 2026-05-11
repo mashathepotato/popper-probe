@@ -78,7 +78,7 @@ A short briefing on the established framing of the area:
 - What's the standard ontology of variables (what dimensions does the field typically vary)?
 - What classical experiments or findings anchor the field?
 
-Hedge explicitly: *"My knowledge cuts off in <date>; anything since then I won't reliably know. For recent work, see piece 2 or 3 below."* If you do not know the field well, say so directly rather than fabricating consensus.
+Hedge explicitly: *"My knowledge has a cutoff date — anything since then I won't reliably know. For recent work, see piece 2 or 3 below."* If you do not know the field well, say so directly rather than fabricating consensus.
 
 #### Piece 2: Recent activity — user-supplied papers first
 

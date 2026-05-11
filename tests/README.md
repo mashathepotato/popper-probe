@@ -26,8 +26,10 @@ Expected: `All N test(s) passed`.
    python3 scripts/validate_hypothesis.py popper-corpus/<slug>/hypothesis.md
    ```
 6. Open a fresh copy of `tests/rubric.md` and tick each item.
-7. Save the completed rubric alongside the produced hypothesis (e.g.,
-   `popper-corpus/<slug>/rubric.md`) and any notes.
+7. Save the completed rubric and the produced hypothesis under
+   `tests/eval-runs/YYYY-MM-DD-<fixture-name>/` (e.g.,
+   `tests/eval-runs/2026-05-11-bold-distinct/rubric.md` and
+   `tests/eval-runs/2026-05-11-bold-distinct/hypothesis.md`).
 
 ## Aggregate
 
