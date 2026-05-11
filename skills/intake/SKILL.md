@@ -173,3 +173,101 @@ A strong answer names a competing account and a prediction the user's claim make
 A weak answer is *"nothing in particular"* or *"I'm not sure."* That's fine — record it as a flag in the file (`distinctiveness: low-information`), not a block. The user may still want to test the claim; they just know it's not a sharp wedge against alternatives.
 
 Probe 4 is recorded but does **not** gate writing the hypothesis file.
+
+## Termination
+
+There are exactly two termination outcomes:
+
+### Falsifiability gate passed
+
+When probes 1–3 have produced:
+
+- An unambiguous operational restatement.
+- At least one explicit, concrete falsifier.
+- A test design sketch (methods, design notes, ≥1 auxiliary assumption).
+
+Probe 4 is also recorded, but its outcome (`low-information` or substantive) does not gate.
+
+Write the hypothesis file with `falsifiability_gate: passed`, `status: active`.
+
+### Falsifiability gate failed
+
+When Probe 1 or Probe 2 cannot be satisfied even after the user has had a real chance to sharpen the claim, and the user has chosen the "record as unfalsifiable" branch over the "reformulate" branch.
+
+Write the hypothesis file with `falsifiability_gate: failed`, `status: unfalsifiable`, and a `## Diagnostic` section explaining what specifically was unfalsifiable and what reformulation might rescue it.
+
+**Do not terminate arbitrarily.** If the conversation feels stuck mid-probe, surface that directly to the user ("we've circled this twice — should we set it aside, narrow it, or record it as unfalsifiable?") rather than silently writing a half-formed file.
+
+## File-writing protocol
+
+When termination conditions are met:
+
+1. **Generate a slug** from a short summary of the operational restatement. Lowercase, hyphen-separated, no special characters. Example: *"Pea plants exposed to 60–80 dB classical music gain more biomass than silent controls"* → `pea-plants-music-biomass`.
+
+2. **Check for collision.** Look at `popper-corpus/<slug>/`. If a hypothesis with the same slug already exists, append `-2`, `-3`, etc. **Never overwrite.**
+
+3. **Draft the file content** following the schema below. Show the entire draft to the user inline (in the chat) — *do not write to disk yet.*
+
+4. **Ask for approval.** *"Here's the draft. Want any changes before I write it to `popper-corpus/<slug>/hypothesis.md`?"*
+
+5. **Apply edits** the user requests. Re-show if substantial.
+
+6. **Write the file** to disk after explicit approval. Create the directory if it does not exist.
+
+7. **Confirm** with the user, showing the path: *"Written to popper-corpus/<slug>/hypothesis.md."*
+
+8. **Suggest validation:** *"You can verify the schema with: `python3 scripts/validate_hypothesis.py popper-corpus/<slug>/hypothesis.md`."*
+
+## Schema (hypothesis.md)
+
+YAML frontmatter followed by markdown sections.
+
+**Frontmatter (required keys):**
+
+- `slug` — the directory slug, matches `popper-corpus/<slug>/`.
+- `created` — ISO date, e.g. `2026-05-11`.
+- `status` — one of `active`, `unfalsifiable`, `retired`.
+- `falsifiability_gate` — one of `passed`, `failed`.
+- `literature_pass` — one of `completed`, `partial`, `none`.
+
+**Body sections — `falsifiability_gate: passed`:**
+
+- `# <one-line claim>` (the operational restatement, as the title)
+- `## Original framing` — the user's first fuzzy version, preserved verbatim in a blockquote.
+- `## Operational restatement` — the third-party-measurable form.
+- `## Falsifier(s)` — bullet list, ≥1 entry, each concrete.
+- `## Test design` — methods, study design, references to standard methods if any.
+- `## Auxiliary assumptions` — bullet list, each assumption named.
+- `## Distinctiveness` — what the claim forbids that competing accounts don't. May be flagged as `low-information`.
+- `## References` — empty if no literature pass, otherwise structured per below.
+- `## Intake log` — one or more dated lines summarizing how the conversation went.
+
+**Body sections — `falsifiability_gate: failed`:**
+
+- `# <one-line claim>` (the user's claim, lightly normalized)
+- `## Original framing` — same as above.
+- `## Diagnostic` — what specifically made the claim unfalsifiable, plus suggestions for reformulation. **Replaces** Operational restatement, Falsifier(s), Test design, Auxiliary assumptions, Distinctiveness.
+- `## References` — empty unless a literature pass happened.
+- `## Intake log` — dated summary.
+
+**References format:**
+
+Each entry is a YAML-like block:
+
+```
+- path: refs/chen-2021.pdf
+  pages: 5-9
+  contribution: prior null result on comparable design; attributed null to dB level
+```
+
+`pages:` is optional (omit for non-paginated files like markdown). `contribution:` is mandatory and should be one specific line — what *this paper specifically contributed* to the hypothesis (not a generic summary).
+
+**Reference paths are relative to the hypothesis file's directory.** Papers live under `popper-corpus/<slug>/refs/`.
+
+## Final reminders
+
+- One probe at a time. Do not bundle questions across probes.
+- Prefer multiple-choice or specific questions over open-ended where possible.
+- Never invent citations. If you did not open a file, do not cite it. If you opened it but only read part, say which part.
+- The user owns the corpus. Show drafts before writing; never write without approval.
+- The discipline is constructive. Sharpening, not shaming.
