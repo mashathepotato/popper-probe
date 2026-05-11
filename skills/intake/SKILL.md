@@ -103,3 +103,73 @@ If the user declines all three pieces or has exhausted orientation, transition t
 > *"Given that, how would you phrase the claim you want to test?"*
 
 **No SoTA-briefing artifact is written in v1.** Anything from orientation that meaningfully shapes the eventual hypothesis lands in that hypothesis's `## References` and `## Intake log` sections — not a separate file.
+
+### Probe 1 — Restate operationally
+
+Force the claim into a form a third party could measure.
+
+Example transformation:
+
+> *"Plants grow better with music."* → *"Pea plants (variety X) exposed to 60–80 dB classical music for 12 hr/day will gain at least Y% more dry biomass than silent controls over Z days, under controlled light/temp/humidity."*
+
+Ask one question at a time. Iterate until the restated form is unambiguous: every noun resolves to something measurable, every comparison has a referent, every quantity has units or at least a magnitude.
+
+If the user resists committing to specifics ("it depends," "in some cases"), name the problem directly: *"A claim that doesn't commit to a magnitude can't be falsified by any measurement, because every result is consistent with it. Can you commit to a number or a direction?"*
+
+**If the user cannot operationalize the claim even with sharpening attempts, do not proceed to Probe 2 as if you had a working hypothesis.** Move directly to the unfalsifiable termination path (see "Termination" below).
+
+### Probe 2 — Name the falsifier
+
+Ask: *"What observation would make you abandon this claim?"*
+
+A good answer is concrete and specific: *"If the biomass gain in the music group is within measurement error of silent controls at Z days, the claim fails."*
+
+A bad answer is evasive: *"Well, it depends on what we mean by 'better,'" "I'd want to consider why,"* or *"I'd refine the hypothesis."* These are red flags for ad-hoc rescue thinking. Surface them.
+
+If the user cannot name any falsifier, even after prompting, the claim is unfalsifiable as stated. Offer the user a choice:
+
+> *"I can either (a) help you reformulate the claim into something with a falsifier, or (b) record this as a `status: unfalsifiable` file with a diagnostic about what makes it unfalsifiable. Which?"*
+
+Then act accordingly.
+
+### Probe 3 — Design the test (the "how")
+
+This probe is constructive, not adversarial. Walk the user through:
+
+**Methods and instruments.** How will the variables in the operational restatement actually be measured? What instruments, protocols, scales? Push for specifics. If the user names a standard method, that's a citation opportunity (note for the References section).
+
+**Study design.** Controls (positive, negative, placebo, sham?); randomization; blinding; sample size intuition (not a power calculation — just enough to gut-check feasibility); what a "clean run" looks like.
+
+**Auxiliary assumptions.** What else has to be true for the test to be meaningful?
+
+- *"The instrument is accurate at the relevant precision."*
+- *"There's no confound X."*
+- *"The sample is drawn from the population we mean to generalize about."*
+
+Auxiliaries are not embarrassing — they are honest. Log every one named. These are the rescue surface for future ad-hoc patches; an explicit list now is a defense against later rationalization.
+
+**Literature pass — runs here if the user supplied papers** (otherwise skip cleanly).
+
+For each user-supplied paper:
+
+1. First pass: abstract, intro, conclusion. State what you read and what you skipped.
+2. Look for four lenses:
+   - **Prior tests:** has this hypothesis (or near-equivalent) been tested?
+   - **Standard methods:** what designs does the field use, and what are their known weaknesses?
+   - **Reported refutations:** papers reporting the hypothesis failing — flag as critical.
+   - **Common hedges / rescues:** recurring phrases the field uses when results disappoint.
+3. Surface findings one at a time, with citation:
+
+   > *"Chen 2021 (p. 7) ran a comparable design with N=40 and found no effect. They attributed it to dB level rather than musical content. Does that change how you'd specify the music exposure?"*
+
+Never cite a section you did not read. If you skipped the results section but the user wants results, ask permission to do a deeper pass.
+
+### Probe 4 — Distinctiveness (light, optional)
+
+One question: *"What does this hypothesis predict that competing accounts don't?"*
+
+A strong answer names a competing account and a prediction the user's claim makes that the competitor doesn't (or vice versa). Record it.
+
+A weak answer is *"nothing in particular"* or *"I'm not sure."* That's fine — record it as a flag in the file (`distinctiveness: low-information`), not a block. The user may still want to test the claim; they just know it's not a sharp wedge against alternatives.
+
+Probe 4 is recorded but does **not** gate writing the hypothesis file.
