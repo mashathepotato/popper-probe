@@ -81,12 +81,38 @@ def test_bad_reference_returns_one():
     return ok
 
 
+def test_empty_section_returns_one():
+    code, out, err = run(INPUTS / "empty_section.md")
+    ok = True
+    ok &= assert_eq(code, 1, "empty_section exit code")
+    ok &= assert_eq(
+        "empty" in err,
+        True,
+        "empty_section stderr mentions empty",
+    )
+    return ok
+
+
+def test_ref_missing_contribution_returns_one():
+    code, out, err = run(INPUTS / "ref_missing_contribution.md")
+    ok = True
+    ok &= assert_eq(code, 1, "ref_missing_contribution exit code")
+    ok &= assert_eq(
+        "contribution" in err,
+        True,
+        "ref_missing_contribution stderr mentions contribution",
+    )
+    return ok
+
+
 TESTS = [
     test_valid_passed_hypothesis_returns_zero,
     test_valid_failed_gate_returns_zero,
     test_missing_sections_returns_one,
     test_bad_status_returns_one,
     test_bad_reference_returns_one,
+    test_empty_section_returns_one,
+    test_ref_missing_contribution_returns_one,
 ]
 
 

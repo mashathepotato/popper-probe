@@ -31,6 +31,18 @@ REQUIRED_SECTIONS_FAILED = {
     "References",
     "Intake log",
 }
+# Sections that must have at least one non-whitespace content line
+NON_EMPTY_SECTIONS_PASSED = {
+    "Operational restatement",
+    "Falsifier(s)",
+    "Test design",
+    "Auxiliary assumptions",
+    "Distinctiveness",
+}
+NON_EMPTY_SECTIONS_FAILED = {
+    "Diagnostic",
+    "Intake log",
+}
 VALID_STATUS = {"active", "unfalsifiable", "retired"}
 VALID_GATE = {"passed", "failed"}
 VALID_LIT_PASS = {"completed", "partial", "none"}
@@ -56,6 +68,19 @@ def parse_frontmatter(text):
 
 def section_headers(text):
     return {line[3:].strip() for line in text.splitlines() if line.startswith("## ")}
+
+
+def section_bodies(text):
+    """Return a dict mapping section header name -> list of content lines."""
+    sections = {}
+    current = None
+    for line in text.splitlines():
+        if line.startswith("## "):
+            current = line[3:].strip()
+            sections[current] = []
+        elif current is not None:
+            sections[current].append(line)
+    return sections
 
 
 def validate(path):
@@ -96,9 +121,25 @@ def validate(path):
             f"missing required sections (for gate={gate}): {sorted(missing_sec)}"
         )
 
+    # Check that load-bearing sections have non-empty body content
+    non_empty_required = (
+        NON_EMPTY_SECTIONS_PASSED if gate == "passed" else NON_EMPTY_SECTIONS_FAILED
+    )
+    bodies = section_bodies(text)
+    for sec in sorted(non_empty_required):
+        if sec not in bodies:
+            continue  # Already caught by missing_sec check above
+        content_lines = [l for l in bodies[sec] if l.strip()]
+        if not content_lines:
+            errors.append(
+                f"section '{sec}' is empty (non-empty body required for gate={gate})"
+            )
+
+    # Check references: path resolution and mandatory contribution field
     hyp_dir = file.parent
     in_refs = False
-    for line in text.splitlines():
+    lines = text.splitlines()
+    for i, line in enumerate(lines):
         if line.startswith("## "):
             in_refs = (line.strip() == "## References")
             continue
@@ -107,6 +148,19 @@ def validate(path):
             full = hyp_dir / ref_path
             if not full.exists():
                 errors.append(f"reference not found: {ref_path}")
+            # Check that contribution: appears before the next entry or section
+            has_contribution = False
+            for j in range(i + 1, len(lines)):
+                next_line = lines[j]
+                if next_line.strip().startswith("- path:") or next_line.startswith("## "):
+                    break
+                if next_line.strip().startswith("contribution:"):
+                    has_contribution = True
+                    break
+            if not has_contribution:
+                errors.append(
+                    f"reference '{ref_path}' is missing mandatory 'contribution:' field"
+                )
 
     return errors
 
