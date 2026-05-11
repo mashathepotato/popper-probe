@@ -37,8 +37,56 @@ def test_valid_passed_hypothesis_returns_zero():
     return ok
 
 
+def test_valid_failed_gate_returns_zero():
+    code, out, err = run(INPUTS / "valid_failed_gate.md")
+    ok = True
+    ok &= assert_eq(code, 0, "valid_failed_gate exit code")
+    ok &= assert_eq("OK" in out, True, "valid_failed_gate stdout contains OK")
+    return ok
+
+
+def test_missing_sections_returns_one():
+    code, out, err = run(INPUTS / "missing_sections.md")
+    ok = True
+    ok &= assert_eq(code, 1, "missing_sections exit code")
+    ok &= assert_eq(
+        "missing required sections" in err,
+        True,
+        "missing_sections stderr mentions missing sections",
+    )
+    return ok
+
+
+def test_bad_status_returns_one():
+    code, out, err = run(INPUTS / "bad_status.md")
+    ok = True
+    ok &= assert_eq(code, 1, "bad_status exit code")
+    ok &= assert_eq(
+        "status must be one of" in err,
+        True,
+        "bad_status stderr mentions status",
+    )
+    return ok
+
+
+def test_bad_reference_returns_one():
+    code, out, err = run(INPUTS / "bad_reference.md")
+    ok = True
+    ok &= assert_eq(code, 1, "bad_reference exit code")
+    ok &= assert_eq(
+        "reference not found" in err,
+        True,
+        "bad_reference stderr mentions reference not found",
+    )
+    return ok
+
+
 TESTS = [
     test_valid_passed_hypothesis_returns_zero,
+    test_valid_failed_gate_returns_zero,
+    test_missing_sections_returns_one,
+    test_bad_status_returns_one,
+    test_bad_reference_returns_one,
 ]
 
 
