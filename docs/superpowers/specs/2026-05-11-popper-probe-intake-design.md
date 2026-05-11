@@ -41,9 +41,36 @@ Adversarial-but-constructive Popperian dialogue. One probe at a time, aimed at s
 
 ### What it does not do
 
-Observation logging, audits, multi-hypothesis comparison, web search (user supplies papers).
+Observation logging, audits, multi-hypothesis comparison. Web search is **off by default** and only available — opt-in, per turn — inside Probe 0 (SoTA orientation, below). Probe 3's literature pass still uses only user-supplied papers, never the web.
 
-### Conversation shape — four probes, in order
+### Conversation shape — one optional preamble, then four probes in order
+
+#### Probe 0 — SoTA orientation (optional preamble)
+
+The skill offers this when any of the following uncertainty signals appear:
+
+- The user says they are new to the field or unfamiliar with the area.
+- The user asks open questions instead of stating a claim (*"I want to study X — what's known?"*).
+- Probe 1 stalls because the initial claim is too vague to restate operationally even with prompting.
+- The user asks for SoTA explicitly.
+
+When triggered, the skill offers, in one message:
+
+> *"Want me to walk through what's established and what's actively being debated here before we sharpen your claim? I'll combine foundations I know with any papers you have. Optional."*
+
+If the user declines, the skill proceeds straight to Probe 1. If the user accepts, the orientation has three pieces, in order:
+
+1. **Foundations from training knowledge.** A short, hedged briefing on the established framing: consensus, standard ontology of variables, classical experiments anchoring the field. The skill explicitly flags its knowledge cutoff so the user knows where the briefing stops being reliable.
+2. **Recent activity — user-supplied papers first.** If the user provided papers, the skill reads them under the same triage rules as Probe 3 (abstract → intro → conclusion first, deeper passes only on request).
+3. **Web search fallback — opt-in only.** If the user has no recent papers and wants the latest, the skill offers: *"I can do a targeted search. I'll show you 3–5 candidate references and let you pick which ones to pull fully before I cite anything."* User confirms; skill runs the search; shows results; user picks; only the picked papers get read fully. No paper is cited unless the user has explicitly chosen to pull it.
+
+After orientation, the skill transitions into Probe 1: *"Given that, how would you phrase the claim you want to test?"*
+
+**No separate corpus artifact in v1.** The SoTA briefing is a conversational preamble. Anything that meaningfully influences the eventual hypothesis lands in that hypothesis's `## References` and `## Intake log` sections — not a standalone file. A SoTA-briefing artifact may be added in a later phase if the project matures.
+
+**Why a probe and not a separate skill.** SoTA review's primary purpose in v1 is to enable a better intake — they are tightly coupled. If we find users want SoTA review standalone later, it can be extracted as a sibling skill in Phase B+.
+
+#### Four core probes
 
 1. **Restate operationally.** Force the claim into terms a third party could measure. *"Plants grow better with music"* → *"Pea plants exposed to 60–80 dB classical music for 12 hr/day will gain X% more biomass than silent controls over Y days."* Skill keeps probing until the restated form is unambiguous.
 
@@ -228,6 +255,7 @@ A `tests/fixtures/` directory with 5–6 canonical input scenarios. Each fixture
 | `hedged-claim` | Claim full of "may," "could," "in some cases" | Call out the hedges, force user to commit |
 | `bold-distinct` | A claim that clearly forbids competing predictions | Probe 4 (distinctiveness) passes cleanly, file marked high-info |
 | `unfalsifiable` | "Consciousness emerges from complexity" | `falsifiability_gate: failed`, diagnostic written |
+| `new-to-field` | "I want to study X but I'm not sure what's known." (no papers supplied) | Probe 0 triggers; skill offers SoTA orientation; presents foundations with cutoff caveat; offers opt-in web search; only proceeds to Probe 1 after orientation |
 
 For v1, evals are run manually: pick a fixture, run the skill, compare the resulting `hypothesis.md` against the expected shape using the validator and a human rubric (Layer 3). Document failures, iterate on SKILL.md. Automating the conversation loop is a Phase B+ concern.
 
