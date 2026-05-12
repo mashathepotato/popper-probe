@@ -50,6 +50,28 @@ You can validate any hypothesis file against the schema with:
 python3 scripts/validate_hypothesis.py popper-corpus/<slug>/hypothesis.md
 ```
 
+## How it works
+
+```mermaid
+flowchart TD
+    Start([User describes a hypothesis]) --> Q0{Uncertainty<br/>signals?}
+    Q0 -->|yes| P0[Probe 0 — SoTA orientation<br/>foundations + user papers + opt-in web]
+    Q0 -->|no| P1
+    P0 --> P1[Probe 1 — Restate operationally]
+    P1 -->|operational| P2[Probe 2 — Name the falsifier]
+    P1 -.->|cannot operationalize| FAIL[FAILED gate<br/>status: unfalsifiable<br/>Diagnostic written]
+    P2 -->|got falsifier| P3[Probe 3 — Test design<br/>+ literature pass on user papers]
+    P2 -.->|none nameable| FAIL
+    P3 --> P4[Probe 4 — Distinctiveness<br/>light, optional]
+    P4 --> PASS[PASSED gate<br/>status: active]
+    PASS --> Write[Draft inline → user approves →<br/>write popper-corpus/&lt;slug&gt;/hypothesis.md]
+    FAIL --> Write
+    Write --> Validate([Optional: validate_hypothesis.py])
+```
+
+See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for static structure
+and data-flow diagrams.
+
 ## Status
 
 V1 — the intake skill. Corpus tooling, observation logging, and audits
