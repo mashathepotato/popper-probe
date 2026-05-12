@@ -1,6 +1,6 @@
 {
   "name": "popper-probe",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A Popperian research companion: adversarially interrogate empirical claims, log them as falsifiable hypotheses, and keep a markdown ledger of evidence over time. v1 ships the intake skill.",
   "author": {
     "name": "masha"
