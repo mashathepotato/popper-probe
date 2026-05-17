@@ -9,10 +9,16 @@
       "name": "popper-probe",
       "source": "./",
       "description": "A Popperian research companion: adversarially interrogate empirical claims, log them as falsifiable hypotheses, and keep a markdown ledger of evidence over time. v1 ships the intake skill.",
-      "version": "0.1.1",
+      "version": "0.1.2",
+      "author": {
+        "name": "masha"
+      },
+      "homepage": "https://github.com/mashathepotato/popper-probe",
+      "repository": "https://github.com/mashathepotato/popper-probe",
       "license": "MIT",
+      "category": "research",
       "keywords": ["research", "hypothesis", "falsifiability", "popper", "science"],
-      "category": "research"
+      "tags": ["research", "hypothesis", "falsifiability", "popper", "science", "methodology", "epistemics", "claude-code-skill", "scientific-method"]
     }
   ]
 }
